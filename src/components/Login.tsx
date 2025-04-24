@@ -3,6 +3,9 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { User } from "./types";
 
+const API_URL = import.meta.env.VITE_API_URL; // 👈 ici la variable dynamique
+
+
 interface LoginProps {
   setUser: (user: User) => void;
 }
@@ -26,7 +29,8 @@ export default function Login({ setUser }: LoginProps) {
     }
 
     try {
-      const res = await axios.post("http://localhost:3001/auth/login", { email, password });
+      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
+
       const data = res.data;
 
       if (!data.token || !data.user) {
