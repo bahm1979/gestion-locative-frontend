@@ -3,6 +3,9 @@ import { toast } from "react-toastify";
 import jsPDF from "jspdf";
 import { Appartement, Locataire, Contrat } from "./types";
 
+// Importer le logo (assure-toi que public/images/logo.png existe)
+import logo from "/images/logo.png"; // Chemin relatif depuis public/
+
 interface ContratListProps {
   contrats: Contrat[] | null;
   appartements: Appartement[] | null;
@@ -12,6 +15,14 @@ interface ContratListProps {
   onUpdate: (contrat: Contrat) => void;
   fetchWithAuth: <T>(url: string, options?: RequestInit) => Promise<T | undefined>;
 }
+
+// Coordonnées du gestionnaire (à personnaliser)
+const gestionnaire = {
+  nom: "Mouctar KANTE",
+  adresse: "Conakry, Guinée",
+  telephone: "+24 596 660 51 30",
+  email: "bahmmouctar@gmail.com",
+};
 
 const formatDate = (dateStr: string) => {
   const date = new Date(dateStr);
@@ -100,8 +111,6 @@ export default function ContratList({
       locataire_nom: locataireNom,
     };
 
-    console.log("Données envoyées à l’API:", contratData);
-
     try {
       if (editingId) {
         const updatedContrat = await fetchWithAuth<Contrat>(`http://localhost:3001/contrats/${editingId}`, {
@@ -188,17 +197,29 @@ export default function ContratList({
       const locataire = locataires?.find((l) => l.id === contrat.locataire_id);
       const monnaie = appartement ? "GNF" : "EUR";
 
+      // Ajouter le logo
+      doc.addImage(logo, "PNG", 10, 10, 50, 20); // Logo en haut à gauche (ajuste les dimensions si besoin)
+
+      // Titre
       doc.setFont("courier", "normal");
       doc.setFontSize(16);
-      doc.text("Contrat de Location", 10, 10);
+      doc.text("Contrat de Location", 70, 20);
 
+      // Coordonnées du gestionnaire
+      doc.setFontSize(10);
+      doc.text(`Gestionnaire: ${gestionnaire.nom}`, 10, 35);
+      doc.text(`Adresse: ${gestionnaire.adresse}`, 10, 40);
+      doc.text(`Téléphone: ${gestionnaire.telephone}`, 10, 45);
+      doc.text(`Email: ${gestionnaire.email}`, 10, 50);
+
+      // Détails du contrat
       doc.setFontSize(12);
-      doc.text(`Appartement: ${cleanString(appartement?.numero || contrat.appartement_nom)}`, 10, 30);
-      doc.text(`Locataire: ${cleanString(locataire?.nom || contrat.locataire_nom)}`, 10, 40);
-      doc.text(`Debut: ${formatDate(contrat.date_debut)}`, 10, 50);
-      doc.text(`Fin: ${contrat.date_fin ? formatDate(contrat.date_fin) : "En cours"}`, 10, 60);
-      doc.text(`Loyer mensuel: ${formatMontantPDF(contrat.loyer_mensuel, monnaie)}`, 10, 70);
-      doc.text(`Caution: ${formatMontantPDF(contrat.caution, monnaie)}`, 10, 80);
+      doc.text(`Appartement: ${cleanString(appartement?.numero || contrat.appartement_nom)}`, 10, 65);
+      doc.text(`Locataire: ${cleanString(locataire?.nom || contrat.locataire_nom)}`, 10, 75);
+      doc.text(`Début: ${formatDate(contrat.date_debut)}`, 10, 85);
+      doc.text(`Fin: ${contrat.date_fin ? formatDate(contrat.date_fin) : "En cours"}`, 10, 95);
+      doc.text(`Loyer mensuel: ${formatMontantPDF(contrat.loyer_mensuel, monnaie)}`, 10, 105);
+      doc.text(`Caution: ${formatMontantPDF(contrat.caution, monnaie)}`, 10, 115);
 
       doc.save(`Contrat_${cleanString(locataire?.nom || contrat.locataire_nom)}_${contrat.id}.pdf`);
       toast.success("Contrat exporté avec succès");
@@ -213,15 +234,25 @@ export default function ContratList({
       setIsLoading(true);
       const doc = new jsPDF();
       doc.setFont("courier", "normal");
-      
+
+      // Ajouter le logo
+      doc.addImage(logo, "PNG", 10, 10, 50, 20); // Logo en haut à gauche
+
       // Titre
       doc.setFontSize(16);
       const currentDate = new Date().toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
-      doc.text(`Liste des Contrats (Généré le ${currentDate})`, 10, 10);
+      doc.text(`Liste des Contrats (Généré le ${currentDate})`, 70, 20);
+
+      // Coordonnées du gestionnaire
+      doc.setFontSize(10);
+      doc.text(`Gestionnaire: ${gestionnaire.nom}`, 10, 35);
+      doc.text(`Adresse: ${gestionnaire.adresse}`, 10, 40);
+      doc.text(`Téléphone: ${gestionnaire.telephone}`, 10, 45);
+      doc.text(`Email: ${gestionnaire.email}`, 10, 50);
 
       // Contenu
       doc.setFontSize(10);
-      let y = 20;
+      let y = 60;
       const pageWidth = doc.internal.pageSize.getWidth() - 20;
 
       if (contrats && contrats.length > 0) {
@@ -237,13 +268,15 @@ export default function ContratList({
                        `Loyer: ${formatMontantPDF(contrat.loyer_mensuel, monnaie)} - ` +
                        `Caution: ${formatMontantPDF(contrat.caution, monnaie)}`;
 
-          console.log("Texte avant PDF:", text);
-
           const splitText = doc.splitTextToSize(text, pageWidth);
           
           if (y + splitText.length * 5 > 270) {
             doc.addPage();
             y = 10;
+            // Ajouter le logo sur chaque nouvelle page
+            doc.addImage(logo, "PNG", 10, 10, 50, 20);
+            doc.setFontSize(16);
+            doc.text(`Liste des Contrats (Suite)`, 70, 20);
           }
 
           splitText.forEach((line: string) => {
