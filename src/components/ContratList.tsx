@@ -4,7 +4,7 @@ import jsPDF from "jspdf";
 import { Appartement, Locataire, Contrat } from "./types";
 
 // Importer le logo (assure-toi que public/images/logo.png existe)
-import logo from "/images/logo.png"; // Chemin relatif depuis public/
+import logo from '../assets/logo.png'; // Chemin relatif depuis public/
 
 interface ContratListProps {
   contrats: Contrat[] | null;
