@@ -4,13 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "prebuild": "if [ \"$OS\" != \"Windows_NT\" ]; then chmod +x node_modules/.bin/vite; fi",
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "start": "vite preview --host 0.0.0.0 --port $PORT",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
+  "prebuild": "if [ \"$OS\" != \"Windows_NT\" ]; then chmod +x node_modules/.bin/vite; fi",
+  "dev": "vite",
+  "build": "npm rebuild && tsc -b && vite build",
+  "start": "vite preview --host 0.0.0.0 --port $PORT",
+  "lint": "eslint .",
+  "preview": "vite preview"
+},
   "engines": {
     "node": "20.x"
   },
