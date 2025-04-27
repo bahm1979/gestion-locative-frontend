@@ -3,8 +3,8 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { User } from "./types";
 
-const API_URL = import.meta.env.VITE_API_URL; // 👈 ici la variable dynamique
-
+// Utilisation centralisée de l'URL de l'API
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface LoginProps {
   setUser: (user: User) => void;
@@ -29,9 +29,9 @@ export default function Login({ setUser }: LoginProps) {
     }
 
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, { email, password });
-
-      const data = res.data;
+      // Appel API avec variable d’environnement
+      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+      const data = response.data;
 
       if (!data.token || !data.user) {
         throw new Error("Réponse invalide : token ou utilisateur manquant");
