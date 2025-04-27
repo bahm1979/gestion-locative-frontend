@@ -3,14 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
- "scripts": {
-  "dev": "vite",
-  "build": "tsc -b && npm run vite-build",
-  "vite-build": "npx vite build",
-  "start": "vite preview --host 0.0.0.0 --port $PORT",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && npm run vite-build",
+    "vite-build": "npx vite build",
+    "start": "vite preview --host 0.0.0.0 --port $PORT",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
