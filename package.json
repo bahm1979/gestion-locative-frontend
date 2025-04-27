@@ -4,12 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "prebuild": "chmod +x node_modules/.bin/vite",
     "dev": "vite",
-    "build": "tsc -b && npm run vite-build",
-    "vite-build": "npx vite build",
+    "build": "tsc -b && vite build",
     "start": "vite preview --host 0.0.0.0 --port $PORT",
     "lint": "eslint .",
     "preview": "vite preview"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
